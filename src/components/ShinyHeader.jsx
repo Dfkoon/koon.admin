@@ -3,38 +3,43 @@ import { styled, Typography, useTheme, Box } from '@mui/material';
 
 const ShinyHeader = ({ text, variant = "h4", align = "center", gutterBottom = true, sx = {} }) => {
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
-
-  const gradient = isDark
-    ? `linear-gradient(to right, #ccc 0, #fff 10%, #ccc 20%)`
-    : `linear-gradient(to right, #444 0, #888 10%, #444 20%)`;
 
   return (
     <Box sx={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start',
-      mb: gutterBottom ? 4 : 2,
-      width: '100%'
+      mb: gutterBottom ? 6 : 3,
+      width: '100%',
+      position: 'relative'
     }}>
-      <StyledWrapper align={align} gradient={gradient} baseColor={isDark ? '#fff' : '#333'}>
-        <Typography variant={variant} component="div" className="shiny-text" gutterBottom={false} sx={{ fontWeight: 'bold', ...sx }}>
+      <StyledWrapper align={align}>
+        <Typography variant={variant} component="div" className="shiny-text" gutterBottom={false} sx={{
+          fontWeight: 900,
+          fontSize: variant === 'h4' ? { xs: '1.8rem', md: '2.5rem' } : undefined,
+          ...sx
+        }}>
           {text}
         </Typography>
       </StyledWrapper>
 
-      <Box sx={{
-        width: 150,
-        height: 4,
-        background: `linear-gradient(90deg, transparent, ${theme.palette.primary.main}, transparent)`,
-        mt: 1,
-        borderRadius: 2
-      }} />
+      <motion.div
+        initial={{ width: 0, opacity: 0 }}
+        animate={{ width: 180, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.5 }}
+        style={{
+          height: 4,
+          background: `linear-gradient(90deg, transparent, ${theme.palette.primary.main}, #FFD700, transparent)`,
+          marginTop: '8px',
+          borderRadius: '4px',
+          boxShadow: `0 0 15px ${theme.palette.primary.main}44`
+        }}
+      />
     </Box>
   );
 }
 
-const StyledWrapper = styled('div')(({ align, gradient, baseColor }) => ({
+const StyledWrapper = styled('div')(({ align }) => ({
   display: 'flex',
   justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start',
   width: '100%',
@@ -42,32 +47,17 @@ const StyledWrapper = styled('div')(({ align, gradient, baseColor }) => ({
   '& .shiny-text': {
     position: 'relative',
     display: 'inline-block',
-    color: baseColor,
-
-    background: gradient,
-
-    backgroundPosition: '0',
+    background: 'linear-gradient(120deg, #FFFFFF 30%, #FFD700 50%, #FFFFFF 70%)',
+    backgroundSize: '200% auto',
+    color: '#000',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
-    animation: 'shine 3s infinite linear',
-    animationFillMode: 'forwards',
-    WebkitTextSizeAdjust: 'none',
-    textDecoration: 'none',
-    whiteSpace: 'nowrap',
-
-    marginBottom: '0.35em',
+    animation: 'shine 4s linear infinite',
   },
 
   '@keyframes shine': {
-    '0%': {
-      backgroundPosition: '0',
-    },
-    '60%': {
-      backgroundPosition: '280px',
-    },
-    '100%': {
-      backgroundPosition: '280px',
-    }
+    '0%': { backgroundPosition: '200% center' },
+    '100%': { backgroundPosition: '-200% center' },
   }
 }));
 

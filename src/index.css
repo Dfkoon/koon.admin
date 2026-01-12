@@ -2,35 +2,39 @@
 
 /* CSS Variables - Matching Main Website */
 :root {
-  /* Primary Colors */
+  /* Brand Identity - Makanak Al-Jame'i */
   --primary: #D32F2F;
-  --primary-light: #E57373;
-  --primary-dark: #B71C1C;
+  --primary-glow: rgba(211, 47, 47, 0.4);
+  --primary-light: #FF5252;
+  --primary-dark: #8B0000;
   --primary-rgb: 211, 47, 47;
 
-  /* Background Colors */
-  --bg-dark: #0a0a0a;
-  --bg-light: #121212;
-  --card-bg: rgba(18, 18, 18, 0.6);
+  /* Neutrals & Dark Mode Palette */
+  --bg-dark: #050505;
+  --bg-surface: #0a0a0a;
+  --bg-card: rgba(15, 15, 15, 0.7);
 
-  /* Glass Effects */
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  /* Glassmorphism - Premium Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
+  --glass-blur: blur(25px);
 
-  /* Text Colors */
-  --text-main: #f5f5f5;
-  --text-muted: #b0b0b0;
-  --text-dark: #666666;
+  /* Text & Accents */
+  --text-main: #FFFFFF;
+  --text-muted: #A0A0A0;
+  --text-dim: #666666;
+  --accent-gold: #FFD700;
 
   /* Status Colors */
-  --success: #27ae60;
-  --warning: #f39c12;
-  --error: #e74c3c;
-  --info: #3498db;
+  --success: #00E676;
+  --warning: #FFAB00;
+  --error: #FF1744;
+  --info: #00B0FF;
 
-  /* Transitions */
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Innovative Transitions */
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* Global Styles */

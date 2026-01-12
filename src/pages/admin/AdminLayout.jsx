@@ -52,7 +52,8 @@ export default function AdminLayout() {
             {/* Sidebar */}
             <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
-                    <div className="brand-logo">لوحة تحكم كـُن</div>
+                    <div className="brand-logo">مكانك الجامعي</div>
+                    <div className="brand-tagline">لوحة التحكم</div>
                 </div>
 
                 <nav className="sidebar-nav">
@@ -64,21 +65,23 @@ export default function AdminLayout() {
                             onClick={() => setSidebarOpen(false)}
                         >
                             <span className="nav-icon">{item.icon}</span>
-                            <span>{item.text}</span>
+                            <span className="nav-text">{item.text}</span>
                         </Link>
                     ))}
                 </nav>
 
                 <div className="sidebar-footer">
                     <div className="user-info">
-                        <div className="user-avatar">{currentUser.email[0].toUpperCase()}</div>
+                        <div className="user-avatar-glow">
+                            <div className="user-avatar">{currentUser.email[0].toUpperCase()}</div>
+                        </div>
                         <div className="user-details">
                             <h4>المسؤول</h4>
                             <span>{currentUser.email}</span>
                         </div>
                     </div>
-                    <button onClick={handleLogout} className="btn-secondary w-full" style={{ width: '100%', justifyContent: 'center', display: 'flex', gap: '0.5rem', color: 'var(--error)', borderColor: 'var(--error)' }}>
-                        <span>🚪</span>
+                    <button onClick={handleLogout} className="logout-btn">
+                        <span className="logout-icon">🚪</span>
                         <span>تسجيل الخروج</span>
                     </button>
                 </div>

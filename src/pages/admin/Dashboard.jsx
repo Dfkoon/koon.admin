@@ -96,9 +96,9 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-container">
-            <div className="dashboard-header">
-                <h1>لوحة القيادة 📊</h1>
-                <p>نظرة عامة على نشاط الموقع والتفاعلات</p>
+            <div className="dashboard-header animate-fade-in">
+                <h1>مكانك الجامعي - لوحة القيادة 📊</h1>
+                <p>مرحباً بك مجدداً، إليك ملخص لأهم النشاطات اليوم</p>
             </div>
 
             <div className="stats-grid">
@@ -110,15 +110,18 @@ export default function Dashboard() {
                 ))}
             </div>
 
-            {/* Quick Actions or Recent Activity could go here */}
             <div className="dashboard-content">
-                <div className="welcome-card glass-card">
+                <div className="welcome-card glass-card animate-slide-up">
                     <div className="welcome-text">
-                        <h2>مرحباً بك في لوحة تحكم كـُن 👋</h2>
+                        <h2>بوابة إدارة مكانك الجامعي 👋</h2>
                         <p>
-                            هنا يمكنك إدارة جميع جوانب الموقع بسهولة. استخدم القائمة الجانبية للتنقل بين الأقسام المختلفة.
-                            تحقق من التنبيهات المعلقة في بطاقات الإحصائيات أعلاه.
+                            نظام متطور لإدارة التفاعلات، الشكاوى، وتبرعات المواد.
+                            استخدم الأدوات الجانبية لمتابعة الإحصائيات والرد على استفسارات المستخدمين بشكل فوري.
                         </p>
+                        <div className="welcome-stats">
+                            <div className="mini-stat"><span>🔒</span> نظام محمي بالكامل</div>
+                            <div className="mini-stat"><span>⚡</span> استجابة فورية</div>
+                        </div>
                     </div>
                 </div>
             </div>

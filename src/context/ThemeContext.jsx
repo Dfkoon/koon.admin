@@ -23,28 +23,34 @@ export const ThemeProvider = ({ children }) => {
         palette: {
             mode,
             primary: {
-                main: mode === 'light' ? '#D32F2F' : '#E57373', // Brand Red
+                main: '#D32F2F', // Brand Red
+                dark: '#8B0000',
+                light: '#FF5252',
             },
             secondary: {
-                main: mode === 'light' ? '#1976d2' : '#90caf9', // Blue as accent
+                main: '#FFD700', // Gold as secondary accent
             },
             background: {
-                default: mode === 'light' ? '#f4f6f8' : '#121212',
-                paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+                default: mode === 'light' ? '#F8F9FA' : '#050505',
+                paper: mode === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(10, 10, 10, 0.8)',
             },
+            text: {
+                primary: mode === 'light' ? '#1A1A1A' : '#FFFFFF',
+                secondary: mode === 'light' ? '#666666' : '#A0A0A0',
+            }
         },
         typography: {
             fontFamily: 'Cairo, Alexandria, Tajawal, Readex Pro, sans-serif',
             allVariants: {
-                fontWeight: 600, // Enforce semi-bold globally as per user request
+                fontWeight: 600,
             },
-            h1: { fontWeight: 800 },
-            h2: { fontWeight: 800 },
+            h1: { fontWeight: 900, letterSpacing: '-0.02em' },
+            h2: { fontWeight: 900, letterSpacing: '-0.02em' },
             h3: { fontWeight: 800 },
-            h4: { fontWeight: 700 },
+            h4: { fontWeight: 800 },
             h5: { fontWeight: 700 },
             h6: { fontWeight: 700 },
-            button: { fontWeight: 700 },
+            button: { fontWeight: 700, textTransform: 'none' },
         },
         components: {
             MuiCard: {

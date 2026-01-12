@@ -26,7 +26,7 @@ const StatsCard = ({
     };
 
     return (
-        <div className={`stats-card stats-card-${color}`}>
+        <div className={`stats-card stats-card-${color} fade-in`}>
             <div className="stats-icon">{icon}</div>
             <div className="stats-content">
                 <h3 className="stats-title">{title}</h3>
@@ -38,6 +38,8 @@ const StatsCard = ({
                     </div>
                 )}
             </div>
+            {/* Ambient Background Glow for Innovation feel */}
+            <div className="card-glow"></div>
         </div>
     );
 };

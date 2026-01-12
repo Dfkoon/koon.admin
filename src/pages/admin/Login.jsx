@@ -31,62 +31,63 @@ const Login = () => {
         <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
             {/* Background Effects */}
             <div className="absolute inset-0 z-0">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px]" />
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-600/20 rounded-full blur-[100px]" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-900/20 rounded-full blur-[100px]" />
             </div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="bg-zinc-900/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-full max-w-md border border-zinc-800 relative z-10"
+                className="bg-zinc-900/60 backdrop-blur-2xl p-10 rounded-[2rem] shadow-2xl w-full max-w-md border border-white/10 relative z-10"
             >
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-2">
-                        KOON ADMIN
+                <div className="text-center mb-10">
+                    <h1 className="text-4xl font-black bg-gradient-to-r from-white to-red-500 bg-clip-text text-transparent mb-3">
+                        مكانك الجامعي
                     </h1>
-                    <p className="text-zinc-400 text-sm">لوحة تحكم المسؤول</p>
+                    <div className="h-1 w-20 bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto mb-4" />
+                    <p className="text-zinc-400 font-bold tracking-widest uppercase text-xs">Admin Portal</p>
                 </div>
 
                 {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-3 rounded-lg mb-6 text-sm text-right">
+                    <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-xl mb-6 text-sm text-right font-bold">
                         {error}
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-zinc-400 text-sm mb-2 text-right">البريد الإلكتروني</label>
+                        <label className="block text-zinc-400 text-xs font-bold mb-2 text-right uppercase tracking-wider">البريد الإلكتروني</label>
                         <input
-                            type="text" // changed from email to text to allow username login if supported, though context strictly implies email usually. keeping text is flexible.
+                            type="text"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors text-right dir-rtl"
-                            placeholder="admin@example.com"
+                            className="w-full bg-black/40 border border-white/5 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all text-right dir-rtl font-medium"
+                            placeholder="admin@makanak.com"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-zinc-400 text-sm mb-2 text-right">كلمة المرور</label>
+                        <label className="block text-zinc-400 text-xs font-bold mb-2 text-right uppercase tracking-wider">كلمة المرور</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors text-right dir-rtl"
+                            className="w-full bg-black/40 border border-white/5 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all text-right dir-rtl"
                             placeholder="••••••••"
                             required
                         />
                     </div>
 
                     <motion.button
-                        whileHover={{ scale: 1.02 }}
+                        whileHover={{ scale: 1.02, translateY: -2 }}
                         whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium py-3 rounded-lg hover:shadow-lg hover:shadow-blue-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-gradient-to-r from-red-600 to-red-800 text-white font-black py-4 rounded-xl shadow-xl shadow-red-900/20 hover:shadow-red-600/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest"
                     >
-                        {loading ? 'جاري التحقق...' : 'تسجيل الدخول'}
+                        {loading ? 'جاري التحقق...' : 'دخول المسؤول'}
                     </motion.button>
                 </form>
             </motion.div>
