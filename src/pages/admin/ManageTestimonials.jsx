@@ -119,7 +119,7 @@ export default function ManageTestimonials() {
                                                 position: 'relative',
                                                 zIndex: 1
                                             }}>
-                                                "{t.text}"
+                                                {t.quote ? `"${t.quote}"` : (isAr ? '"لا يوجد نص"' : '"No text provided"')}
                                             </Typography>
                                         </Box>
 
@@ -135,16 +135,16 @@ export default function ManageTestimonials() {
                                                     boxShadow: '0 0 15px rgba(211, 47, 47, 0.3)'
                                                 }}
                                             >
-                                                {t.name[0].toUpperCase()}
+                                                {(t.author ? t.author[0] : 'U').toUpperCase()}
                                             </Avatar>
                                             <Box>
                                                 <Typography variant="h6" sx={{ fontWeight: 900, color: '#FFF', lineHeight: 1.2 }}>
-                                                    {t.name}
+                                                    {t.author || (isAr ? 'طالب مجهول' : 'Anonymous Student')}
                                                 </Typography>
                                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
                                                     <School sx={{ fontSize: '0.9rem', color: 'var(--primary)' }} />
                                                     <Typography variant="caption" sx={{ color: 'var(--primary)', fontWeight: 'bold' }}>
-                                                        {t.major || (isAr ? 'تخصص غير محدد' : 'General Major')}
+                                                        {t.company || (isAr ? 'تخصص غير محدد' : 'General Major')}
                                                     </Typography>
                                                 </Box>
                                             </Box>
