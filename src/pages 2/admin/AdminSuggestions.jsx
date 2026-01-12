@@ -3,7 +3,7 @@ import {
     Box, Typography, Paper, Card, CardContent,
     Button, Grid, TextField, Dialog, DialogTitle,
     DialogContent, DialogActions, Chip, Divider,
-    IconButton, Tooltip
+    IconButton, Tooltip as MuiTooltip
 } from '@mui/material';
 import {
     Delete, Reply, CheckCircle,
@@ -11,7 +11,7 @@ import {
     Email as EmailIcon
 } from '@mui/icons-material';
 import { qnaService as suggestionsService } from '../../services/qnaService';
-import ShinyHeader from '../../components/ShinyHeader';
+import ShinyHeader from '../../components/ui/ShinyHeader';
 import { useLanguage } from '../../context/LanguageContext';
 import toast from 'react-hot-toast';
 
@@ -57,8 +57,9 @@ export default function AdminSuggestions() {
         }
     };
 
-    const toggleStatus = async (id, currentIsPublic) => {
-        const result = await suggestionsService.updateSuggestion(id, { isPublic: !currentIsPublic });
+    const toggleStatus = async (id, currentStatus) => {
+        const newStatus = currentStatus === 'public' ? 'pending' : 'public';
+        const result = await suggestionsService.updateStatus(id, newStatus);
         if (result.success) {
             toast.success(isAr ? 'تم تحديث الحالة' : 'Status updated');
             loadMessages();
@@ -83,7 +84,7 @@ export default function AdminSuggestions() {
                         <Grid item xs={12} md={6} key={msg.id}>
                             <Card sx={{
                                 height: '100%',
-                                borderLeft: msg.isPublic ? '5px solid #4caf50' : '5px solid #ff9800',
+                                borderLeft: msg.status === 'public' ? '5px solid #4caf50' : '5px solid #ff9800',
                                 position: 'relative',
                                 display: 'flex',
                                 flexDirection: 'column'
@@ -93,25 +94,25 @@ export default function AdminSuggestions() {
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                             <Person color="primary" fontSize="small" />
                                             <Typography variant="subtitle1" fontWeight="bold">
-                                                {msg.name || (isAr ? 'فاعل خير' : 'Anonymous')}
+                                                {msg.senderName || (isAr ? 'فاعل خير' : 'Anonymous')}
                                             </Typography>
                                         </Box>
                                         <Chip
-                                            label={isAr ? (msg.isPublic ? 'منشور' : 'قيد الانتظار') : (msg.isPublic ? 'Public' : 'Pending')}
+                                            label={isAr ? (msg.status === 'public' ? 'منشور' : 'قيد الانتظار') : msg.status}
                                             size="small"
-                                            color={msg.isPublic ? 'success' : 'warning'}
+                                            color={msg.status === 'public' ? 'success' : 'warning'}
                                         />
                                     </Box>
 
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                                         <Category color="action" fontSize="small" />
                                         <Typography variant="caption" color="text.secondary">
-                                            {msg.type}
+                                            {msg.category}
                                         </Typography>
                                     </Box>
 
                                     <Typography variant="body1" sx={{ mb: 2, whiteSpace: 'pre-wrap' }}>
-                                        {msg.message}
+                                        {msg.text}
                                     </Typography>
 
                                     {msg.reply && (
@@ -128,7 +129,7 @@ export default function AdminSuggestions() {
 
                                 <Box sx={{ p: 1, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                                     <Tooltip title={isAr ? 'تغيير الحالة' : 'Toggle Status'}>
-                                        <IconButton onClick={() => toggleStatus(msg.id, msg.isPublic)} size="small" color="info">
+                                        <IconButton onClick={() => toggleStatus(msg.id, msg.status)} size="small" color="info">
                                             <CheckCircle fontSize="small" />
                                         </IconButton>
                                     </Tooltip>

@@ -4,9 +4,9 @@ import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/st
 import CssBaseline from '@mui/material/CssBaseline';
 import { useLanguage } from './LanguageContext';
 
-const ThemeContext = createContext();
+const ColorModeContext = createContext();
 
-export const ThemeProvider = ({ children }) => {
+export const ColorModeProvider = ({ children }) => {
     const [mode, setMode] = useState(() => localStorage.getItem('themeMode') || 'light');
     const { language } = useLanguage();
 
@@ -23,10 +23,10 @@ export const ThemeProvider = ({ children }) => {
         palette: {
             mode,
             primary: {
-                main: mode === 'light' ? '#D32F2F' : '#E57373', // Brand Red
+                main: mode === 'light' ? '#1976d2' : '#90caf9', // Blue / Light Blue
             },
             secondary: {
-                main: mode === 'light' ? '#1976d2' : '#90caf9', // Blue as accent
+                main: mode === 'light' ? '#f1c40f' : '#ffeb3b', // Yellow
             },
             background: {
                 default: mode === 'light' ? '#f4f6f8' : '#121212',
@@ -74,13 +74,13 @@ export const ThemeProvider = ({ children }) => {
     }), [mode, language]);
 
     return (
-        <ThemeContext.Provider value={{ mode, toggleColorMode }}>
+        <ColorModeContext.Provider value={{ mode, toggleColorMode }}>
             <MuiThemeProvider theme={theme}>
                 <CssBaseline />
                 {children}
             </MuiThemeProvider>
-        </ThemeContext.Provider>
+        </ColorModeContext.Provider>
     );
 };
 
-export const useColorMode = () => useContext(ThemeContext);
+export const useColorMode = () => useContext(ColorModeContext);

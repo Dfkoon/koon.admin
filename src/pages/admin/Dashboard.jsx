@@ -1,111 +1,127 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Paper, Box, Grid, Card, CardContent, CircularProgress } from '@mui/material';
-import { QuestionAnswer, DoneAll, Pending, People } from '@mui/icons-material';
-import ShinyHeader from '../../components/ShinyHeader';
 import { db } from '../../lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import StatsCard from '../../components/StatsCard';
+import './Dashboard.css';
 
 export default function Dashboard() {
     const [stats, setStats] = useState({
-        totalSubscribers: 0,
-        totalQuestions: 0,
+        subscribers: 0,
+        questions: 0,
         pendingQuestions: 0,
-        answeredQuestions: 0
+        donations: 0,
+        pendingDonations: 0,
+        testimonials: 0
     });
     const [loading, setLoading] = useState(true);
 
-    const fetchStats = async () => {
-        try {
-            // Fetch Subscribers Count
-            const subscribersSnap = await getDocs(collection(db, "subscribers"));
-            const totalSubscribers = subscribersSnap.size;
-
-            // Fetch Q&A Counts
-            const qnaSnap = await getDocs(collection(db, "qna"));
-            const totalQuestions = qnaSnap.size;
-            const pendingQuestions = qnaSnap.docs.filter(doc => !doc.data().answer).length;
-            const answeredQuestions = totalQuestions - pendingQuestions;
-
-            setStats({
-                totalSubscribers,
-                totalQuestions,
-                pendingQuestions,
-                answeredQuestions
-            });
-        } catch (error) {
-            console.error("Error fetching dashboard stats:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                // 1. Subscribers
+                const subscribersSnap = await getDocs(collection(db, "subscribers"));
+
+                // 2. Q&A
+                const qnaSnap = await getDocs(collection(db, "qna"));
+                const pendingQna = qnaSnap.docs.filter(doc => !doc.data().answer).length;
+
+                // 3. Donations (Material Exchange)
+                const donationsSnap = await getDocs(collection(db, "materialDonations"));
+                const pendingDonations = donationsSnap.docs.filter(doc => doc.data().status === 'pending').length;
+
+                // 4. Testimonials
+                const testimonialsSnap = await getDocs(collection(db, "testimonials"));
+
+                setStats({
+                    subscribers: subscribersSnap.size,
+                    questions: qnaSnap.size,
+                    pendingQuestions: pendingQna,
+                    donations: donationsSnap.size,
+                    pendingDonations: pendingDonations,
+                    testimonials: testimonialsSnap.size
+                });
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchStats();
     }, []);
 
-    const StatCard = ({ title, count, icon, color }) => (
-        <Card sx={{ height: '100%', display: 'flex', alignItems: 'center', p: 2, bgcolor: color, color: '#fff' }}>
-            <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-                {icon}
-            </Box>
-            <CardContent sx={{ p: '0 !important', flexGrow: 1 }}>
-                <Typography variant="h4" fontWeight="bold">
-                    {loading ? <CircularProgress size={30} sx={{ color: '#fff' }} /> : count}
-                </Typography>
-                <Typography variant="subtitle1" sx={{ opacity: 0.9 }}>
-                    {title}
-                </Typography>
-            </CardContent>
-        </Card>
-    );
+    const cards = [
+        {
+            title: 'إجمالي المشتركين',
+            value: stats.subscribers,
+            icon: '👥',
+            color: 'primary',
+            change: '+12% هذا الشهر',
+            changeType: 'positive'
+        },
+        {
+            title: 'تبرعات المواد',
+            value: stats.donations,
+            icon: '📦',
+            color: 'success',
+            change: `${stats.pendingDonations} قيد المراجعة`,
+            changeType: stats.pendingDonations > 0 ? 'warning' : 'neutral'
+        },
+        {
+            title: 'أسئلة واستفسارات',
+            value: stats.questions,
+            icon: '💬',
+            color: 'warning',
+            change: `${stats.pendingQuestions} بانتظار الرد`,
+            changeType: stats.pendingQuestions > 0 ? 'negative' : 'positive'
+        },
+        {
+            title: 'آراء الزوار',
+            value: stats.testimonials,
+            icon: '⭐',
+            color: 'info',
+            change: 'تم التحقق',
+            changeType: 'neutral'
+        }
+    ];
+
+    if (loading) {
+        return (
+            <div className="dashboard-loading">
+                <div className="spinner">⏳</div>
+                <p>جاري تحديث البيانات...</p>
+            </div>
+        );
+    }
 
     return (
-        <Box>
-            <ShinyHeader text="لوحة القيادة" variant="h4" gutterBottom />
+        <div className="dashboard-container">
+            <div className="dashboard-header">
+                <h1>لوحة القيادة 📊</h1>
+                <p>نظرة عامة على نشاط الموقع والتفاعلات</p>
+            </div>
 
-            <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} sm={6} md={3}>
-                    <StatCard
-                        title="إجمالي المشتركين"
-                        count={stats.totalSubscribers}
-                        icon={<People fontSize="large" />}
-                        color="#1976d2"
+            <div className="stats-grid">
+                {cards.map((card, index) => (
+                    <StatsCard
+                        key={index}
+                        {...card}
                     />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                    <StatCard
-                        title="إجمالي الأسئلة"
-                        count={stats.totalQuestions}
-                        icon={<QuestionAnswer fontSize="large" />}
-                        color="#4caf50"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                    <StatCard
-                        title="أسئلة قيد الانتظار"
-                        count={stats.pendingQuestions}
-                        icon={<Pending fontSize="large" />}
-                        color="#ff9800"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                    <StatCard
-                        title="أسئلة مجابة"
-                        count={stats.answeredQuestions}
-                        icon={<DoneAll fontSize="large" />}
-                        color="#9c27b0"
-                    />
-                </Grid>
-            </Grid>
+                ))}
+            </div>
 
-            <Paper sx={{ p: 4, textAlign: 'center', color: 'text.secondary', bgcolor: '#f9fafb' }}>
-                <Typography variant="h6">
-                    مرحباً بك في لوحة تحكم موقع كـُن
-                </Typography>
-                <Typography variant="body2" sx={{ mt: 1 }}>
-                    استخدم القائمة الجانبية للإجابة على أسئلة الطلاب، إدارة البلاغات، ومتابعة الإحصائيات.
-                </Typography>
-            </Paper>
-        </Box>
+            {/* Quick Actions or Recent Activity could go here */}
+            <div className="dashboard-content">
+                <div className="welcome-card glass-card">
+                    <div className="welcome-text">
+                        <h2>مرحباً بك في لوحة تحكم كـُن 👋</h2>
+                        <p>
+                            هنا يمكنك إدارة جميع جوانب الموقع بسهولة. استخدم القائمة الجانبية للتنقل بين الأقسام المختلفة.
+                            تحقق من التنبيهات المعلقة في بطاقات الإحصائيات أعلاه.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
