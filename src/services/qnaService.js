@@ -1,7 +1,7 @@
 import { db } from '../lib/firebase';
 import { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
 
-const COLLECTION_NAME = 'suggestions';
+const COLLECTION_NAME = 'qna'; // ✅ موحد مع firestore.rules
 
 export const qnaService = {
     // Get all suggestions
