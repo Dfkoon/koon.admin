@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box, Typography, Card, CardContent, Button,
-    Grid, Chip, Paper, IconButton, Divider,
-    Dialog, DialogTitle, DialogContent
+    Box, Typography, Button,
+    Grid, Chip, IconButton, Divider,
+    Dialog, DialogTitle, DialogContent, Avatar, useTheme
 } from '@mui/material';
 import {
     Delete, Visibility, HelpOutline,
     Person, ErrorOutline,
-    ContentCopy, Close
+    ContentCopy, Close, WarningAmber
 } from '@mui/icons-material';
+import { motion, AnimatePresence } from 'framer-motion';
 import { qnaService } from '../../services/qnaService';
 import ShinyHeader from '../../components/ShinyHeader';
 import { useLanguage } from '../../context/LanguageContext';
@@ -16,6 +17,7 @@ import toast from 'react-hot-toast';
 
 export default function AdminReports() {
     const { language } = useLanguage();
+    const theme = useTheme();
     const isAr = language === 'ar';
     const [reports, setReports] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +31,6 @@ export default function AdminReports() {
     };
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadReports();
     }, []);
 
@@ -51,130 +52,181 @@ export default function AdminReports() {
     };
 
     return (
-        <Box>
-            <ShinyHeader text={isAr ? 'بلاغات الأسئلة' : 'Question Reports'} variant="h4" gutterBottom />
+        <Box sx={{ p: { xs: 1, md: 3 } }}>
+            <Box sx={{ mb: 6 }}>
+                <ShinyHeader text={isAr ? 'بلاغات الأسئلة' : 'Question Reports'} variant="h3" gutterBottom />
+                <Typography variant="body2" sx={{ color: 'text.muted', mt: 1, fontWeight: 700 }}>
+                    {isAr ? 'مراجعة البلاغات المقدمة من الطلاب حول الأسئلة' : 'Review reports submitted by students about questions'}
+                </Typography>
+            </Box>
 
             {isLoading ? (
-                <Box sx={{ p: 5, textAlign: 'center' }}>
-                    <Typography>{isAr ? 'جاري التحميل...' : 'Loading...'}</Typography>
+                <Box sx={{ textAlign: 'center', p: 10 }}>
+                    <Typography variant="h5" className="animate-pulse">{isAr ? 'جاري التحميل...' : 'Syncing reports...'}</Typography>
                 </Box>
             ) : reports.length === 0 ? (
-                <Paper sx={{ p: 3, textAlign: 'center', color: 'text.secondary' }}>
-                    <Typography>{isAr ? 'لا توجد بلاغات حالياً' : 'No reports found'}</Typography>
-                </Paper>
+                <Box className="glass-card" sx={{ p: 10, textAlign: 'center', borderRadius: '40px' }}>
+                    <WarningAmber sx={{ fontSize: '5rem', opacity: 0.1, mb: 2 }} />
+                    <Typography variant="h6" color="text.muted">{isAr ? 'لا توجد بلاغات حالياً' : 'No active reports'}</Typography>
+                </Box>
             ) : (
-                <Grid container spacing={3}>
-                    {reports.map((report) => (
-                        <Grid item xs={12} key={report.id}>
-                            <Card sx={{
-                                borderLeft: '4px solid #f44336',
-                                transition: '0.3s',
-                                '&:hover': { boxShadow: 4 }
-                            }}>
-                                <CardContent>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12} md={3}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                                                <Person color="primary" fontSize="small" />
-                                                <Typography variant="subtitle1" fontWeight="bold">
+                <Grid container spacing={4}>
+                    <AnimatePresence>
+                        {reports.map((report, index) => (
+                            <Grid item xs={12} key={report.id}>
+                                <motion.div
+                                    initial={{ opacity: 0, x: isAr ? 50 : -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                >
+                                    <Box className="glass-card" sx={{
+                                        p: 0,
+                                        display: 'flex',
+                                        flexDirection: { xs: 'column', md: 'row' },
+                                        borderRadius: '30px',
+                                        overflow: 'hidden',
+                                        border: '1px solid var(--glass-border)',
+                                        background: 'rgba(211, 47, 47, 0.05)',
+                                        transition: 'var(--transition-smooth)',
+                                        '&:hover': {
+                                            borderColor: 'var(--primary)',
+                                            boxShadow: '0 0 30px rgba(211, 47, 47, 0.1)'
+                                        }
+                                    }}>
+                                        {/* Error Indicator Side */}
+                                        <Box sx={{
+                                            width: { xs: '100%', md: '12px' },
+                                            height: { xs: '6px', md: 'auto' },
+                                            bgcolor: 'var(--primary)',
+                                            boxShadow: '0 0 15px var(--primary)'
+                                        }} />
+
+                                        {/* Sender Profile Section */}
+                                        <Box sx={{
+                                            p: 4,
+                                            minWidth: '220px',
+                                            bgcolor: 'rgba(0,0,0,0.2)',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: 2,
+                                            borderRight: isAr ? 'none' : '1px solid var(--glass-border)',
+                                            borderLeft: isAr ? '1px solid var(--glass-border)' : 'none'
+                                        }}>
+                                            <Avatar sx={{
+                                                width: 70,
+                                                height: 70,
+                                                bgcolor: 'var(--bg-dark)',
+                                                border: '2px solid var(--primary)',
+                                                boxShadow: '0 0 20px rgba(211, 47, 47, 0.2)'
+                                            }}>
+                                                <Person sx={{ fontSize: '2.5rem', color: 'var(--primary)' }} />
+                                            </Avatar>
+                                            <Box sx={{ textAlign: 'center' }}>
+                                                <Typography variant="h6" sx={{ fontWeight: 900, color: '#FFF' }}>
                                                     {report.senderName}
                                                 </Typography>
-                                            </Box>
-                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                                                {new Date(report.createdAt).toLocaleString()}
-                                            </Typography>
-                                            <Box sx={{ mt: 2 }}>
-                                                <Chip
-                                                    label={isAr ? `سؤال رقم ${report.questionIndex}` : `Q #${report.reportId || report.questionIndex}`}
-                                                    size="small"
-                                                    color="info"
-                                                    variant="outlined"
-                                                />
-                                            </Box>
-                                        </Grid>
-
-                                        <Grid item xs={12} md={report.image ? 6 : 9}>
-                                            <Box sx={{ mb: 2 }}>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                                                    <HelpOutline fontSize="small" color="action" />
-                                                    <Typography variant="subtitle2" color="text.secondary">
-                                                        {isAr ? 'نص السؤال:' : 'Question Text:'}
-                                                    </Typography>
-                                                    <IconButton size="small" onClick={() => copyToClipboard(report.questionText)}>
-                                                        <ContentCopy fontSize="inherit" />
-                                                    </IconButton>
-                                                </Box>
-                                                <Typography variant="body2" sx={{ bgcolor: 'action.hover', p: 1, borderRadius: 1, fontStyle: 'italic' }}>
-                                                    {report.questionText}
+                                                <Typography variant="caption" sx={{ color: 'text.muted', fontWeight: 700 }}>
+                                                    {new Date(report.createdAt).toLocaleDateString(isAr ? 'ar-EG' : 'en-US')}
                                                 </Typography>
                                             </Box>
+                                            <Chip
+                                                label={isAr ? `خدمة كـُـن` : `KOON Q&A`}
+                                                size="small"
+                                                sx={{ mt: 1, bgcolor: 'rgba(255,255,255,0.05)', fontWeight: 900 }}
+                                            />
+                                        </Box>
 
-                                            <Box>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                                                    <ErrorOutline fontSize="small" color="error" />
-                                                    <Typography variant="subtitle2" color="error">
-                                                        {isAr ? 'وصف الخطأ:' : 'Error Description:'}
+                                        {/* Report Body */}
+                                        <Box sx={{ p: 4, flexGrow: 1, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
+                                            <Box sx={{ flexGrow: 1 }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                                                    <HelpOutline sx={{ color: 'var(--primary)', fontSize: '1.2rem' }} />
+                                                    <Typography variant="caption" sx={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.6 }}>
+                                                        {isAr ? 'السؤال محل البلاغ' : 'Reported Question'}
+                                                    </Typography>
+                                                    <Tooltip title={isAr ? 'نسخ نص السؤال' : 'Copy Question'}>
+                                                        <IconButton size="small" onClick={() => copyToClipboard(report.questionText)} sx={{ ml: 'auto' }}>
+                                                            <ContentCopy fontSize="inherit" />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Box>
+                                                <Box sx={{ p: 2, bgcolor: 'rgba(0,0,0,0.3)', borderRadius: '15px', border: '1px solid var(--glass-border)', mb: 3 }}>
+                                                    <Typography variant="body2" sx={{ color: '#CCC', fontStyle: 'italic', lineHeight: 1.6 }}>
+                                                        "{report.questionText}"
                                                     </Typography>
                                                 </Box>
-                                                <Typography variant="body1" sx={{ fontWeight: 500 }}>
+
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                                                    <ErrorOutline sx={{ color: 'var(--primary)', fontSize: '1.2rem' }} />
+                                                    <Typography variant="caption" sx={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.6 }}>
+                                                        {isAr ? 'وصف المشكلة' : 'Issue Description'}
+                                                    </Typography>
+                                                </Box>
+                                                <Typography variant="body1" sx={{ color: '#FFF', fontWeight: 700, lineHeight: 1.6 }}>
                                                     {report.errorDescription}
                                                 </Typography>
                                             </Box>
-                                        </Grid>
 
-                                        {report.image && (
-                                            <Grid item xs={12} md={3}>
-                                                <Box
-                                                    onClick={() => setSelectedImage(report.image)}
-                                                    sx={{
-                                                        width: '100%',
-                                                        height: '120px',
-                                                        borderRadius: 1,
-                                                        overflow: 'hidden',
-                                                        cursor: 'zoom-in',
-                                                        position: 'relative',
-                                                        border: '1px solid',
-                                                        borderColor: 'divider'
-                                                    }}
-                                                >
-                                                    <img
-                                                        src={report.image}
-                                                        alt="Report Proof"
-                                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                    />
-                                                    <Box sx={{
-                                                        position: 'absolute',
-                                                        bottom: 0,
-                                                        left: 0,
-                                                        right: 0,
-                                                        bgcolor: 'rgba(0,0,0,0.5)',
-                                                        color: 'white',
-                                                        p: 0.5,
-                                                        textAlign: 'center'
-                                                    }}>
-                                                        <Visibility sx={{ fontSize: '1rem' }} />
+                                            {/* Proof Image */}
+                                            {report.image && (
+                                                <Box sx={{ width: { xs: '100%', md: '180px' }, height: '180px', flexShrink: 0 }}>
+                                                    <Box
+                                                        onClick={() => setSelectedImage(report.image)}
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            borderRadius: '20px',
+                                                            overflow: 'hidden',
+                                                            cursor: 'zoom-in',
+                                                            border: '2px solid var(--glass-border)',
+                                                            position: 'relative',
+                                                            '&:hover .overlay': { opacity: 1 }
+                                                        }}
+                                                    >
+                                                        <img src={report.image} alt="Proof" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                        <Box className="overlay" sx={{
+                                                            position: 'absolute', inset: 0, bgcolor: 'rgba(0,0,0,0.6)',
+                                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                            opacity: 0, transition: '0.3s'
+                                                        }}>
+                                                            <Visibility sx={{ color: '#FFF' }} />
+                                                        </Box>
                                                     </Box>
                                                 </Box>
-                                            </Grid>
-                                        )}
-                                    </Grid>
+                                            )}
+                                        </Box>
 
-                                    <Divider sx={{ my: 2 }} />
-
-                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                        <Button
-                                            startIcon={<Delete />}
-                                            color="error"
-                                            size="small"
-                                            onClick={() => handleDelete(report.id)}
-                                        >
-                                            {isAr ? 'حذف البلاغ' : 'Delete Report'}
-                                        </Button>
+                                        {/* Action Bar */}
+                                        <Box sx={{
+                                            p: 3,
+                                            bgcolor: 'rgba(0,0,0,0.1)',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            gap: 2,
+                                            minWidth: '120px'
+                                        }}>
+                                            <Tooltip title={isAr ? 'تم الحل / حذف البلاغ' : 'Resolved / Delete'}>
+                                                <IconButton
+                                                    onClick={() => handleDelete(report.id)}
+                                                    sx={{
+                                                        bgcolor: 'rgba(211, 47, 47, 0.1)',
+                                                        color: 'var(--primary)',
+                                                        width: 50, height: 50,
+                                                        borderRadius: '15px'
+                                                    }}
+                                                >
+                                                    <Delete />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Box>
                                     </Box>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
+                                </motion.div>
+                            </Grid>
+                        ))}
+                    </AnimatePresence>
                 </Grid>
             )}
 
@@ -182,16 +234,19 @@ export default function AdminReports() {
                 open={Boolean(selectedImage)}
                 onClose={() => setSelectedImage(null)}
                 maxWidth="lg"
+                PaperProps={{ sx: { bgcolor: 'transparent', boxShadow: 'none' } }}
             >
-                <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                    <IconButton onClick={() => setSelectedImage(null)}>
+                <Box sx={{ position: 'relative' }}>
+                    <IconButton
+                        onClick={() => setSelectedImage(null)}
+                        sx={{ position: 'absolute', top: -40, right: 0, color: '#FFF' }}
+                    >
                         <Close />
                     </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <img src={selectedImage} alt="Full Preview" style={{ width: '100%', height: 'auto', borderRadius: '8px' }} />
-                </DialogContent>
+                    <img src={selectedImage} alt="Full Proof" style={{ width: '100%', maxWidth: '90vw', maxHeight: '80vh', borderRadius: '30px', border: '5px solid var(--glass-border)' }} />
+                </Box>
             </Dialog>
         </Box>
     );
 }
+
