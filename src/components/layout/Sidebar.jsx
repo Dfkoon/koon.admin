@@ -98,7 +98,17 @@ const Sidebar = () => {
                 </Box>
 
                 {/* Navigation Links */}
-                <Box sx={{ flex: 1, px: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box sx={{
+                    flex: 1,
+                    px: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    overflowY: 'auto', // Enable scrolling
+                    '&::-webkit-scrollbar': { display: 'none' }, // Hide scrollbar for Chrome/Safari
+                    msOverflowStyle: 'none', // Hide for IE/Edge
+                    scrollbarWidth: 'none' // Hide for Firefox
+                }}>
                     {menuItems.map((item) => (
                         <NavLink
                             to={item.path}
