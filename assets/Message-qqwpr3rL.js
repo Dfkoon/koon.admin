@@ -1,0 +1,1 @@
+import{i as a,b as r,j as t}from"./index-DiJP0-9s.js";var e={},s=a;Object.defineProperty(e,"__esModule",{value:!0});var u=e.default=void 0,o=s(r()),i=t;u=e.default=(0,o.default)((0,i.jsx)("path",{d:"M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-2 12H6v-2h12zm0-3H6V9h12zm0-3H6V6h12z"}),"Message");export{u as d};
